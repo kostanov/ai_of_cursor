@@ -18,12 +18,42 @@
 
 - Go 1.22+
 
+## Структура проекта
+
+```
+go-server/
+├── cmd/server/main.go       # точка входа
+├── internal/
+│   ├── config/              # константы (порт, путь к БД)
+│   ├── models/              # DTO и модели ответов
+│   ├── database/            # подключение и схема SQLite
+│   ├── repository/          # работа с таблицей users
+│   ├── service/             # бизнес-логика (активные пользователи, фоновые задачи)
+│   ├── handler/             # HTTP-обработчики
+│   ├── router/              # регистрация маршрутов
+│   └── util/                # JSON-ответы, разбор пути
+├── go.mod
+└── README.md
+```
+
+## Команды (just)
+
+| Команда | Описание |
+|---------|----------|
+| `just` | список рецептов |
+| `just run` | запуск сервера |
+| `just build` | сборка бинарника `server` |
+| `just tidy` | `go mod tidy` |
+| `just fmt` | `gofmt` для `cmd` и `internal` |
+| `just vet` | `go vet ./...` |
+| `just test` | `go test ./...` |
+
 ## Установка и запуск
 
 ```bash
 cd go-server
 go mod tidy
-go run .
+just run
 ```
 
 Сервер поднимется на `http://127.0.0.1:8080`.
@@ -32,7 +62,7 @@ go run .
 
 ```bash
 cd go-server
-go build -o server .
+go build -o server ./cmd/server
 ./server
 ```
 
