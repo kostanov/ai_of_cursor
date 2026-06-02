@@ -4,6 +4,9 @@ default:
 run:
     uv run python main.py
 
+api:
+    uv run python api.py
+
 lint:
     uv run ruff check .
 
