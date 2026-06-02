@@ -33,7 +33,29 @@ go-server/
 │   ├── router/              # регистрация маршрутов
 │   └── util/                # JSON-ответы, разбор пути
 ├── go.mod
+├── openapi.yaml             # OpenAPI 3.1
 └── README.md
+```
+
+## OpenAPI 3.1
+
+Спецификация API: [openapi.yaml](openapi.yaml).
+
+Просмотр (при установленном [Swagger Editor](https://editor.swagger.io/) или Docker):
+
+```bash
+# Swagger UI (Docker)
+docker run --rm -p 8081:8080 \
+  -e SWAGGER_JSON=/openapi.yaml \
+  -v "$(pwd)/openapi.yaml:/openapi.yaml" \
+  swaggerapi/swagger-ui
+# Открыть http://127.0.0.1:8081
+```
+
+Валидация (опционально, [Redocly CLI](https://redocly.com/docs/cli/)):
+
+```bash
+npx @redocly/cli lint openapi.yaml
 ```
 
 ## Команды (just)
@@ -47,6 +69,11 @@ go-server/
 | `just fmt` | `gofmt` для `cmd` и `internal` |
 | `just vet` | `go vet ./...` |
 | `just test` | `go test ./...` |
+| `just docker-build` | сборка Docker-образа |
+| `just docker-up` | `docker compose up -d --build` |
+| `just docker-down` | остановка compose |
+| `just docker-logs` | логи контейнера |
+| `just test-api` | проверка всех эндпоинтов (`scripts/test-endpoints.sh`) |
 
 ## Установка и запуск
 
@@ -65,6 +92,56 @@ cd go-server
 go build -o server ./cmd/server
 ./server
 ```
+
+## Docker
+
+Локально или на сервере (нужны Docker и Docker Compose):
+
+```bash
+cd go-server
+docker compose up -d --build
+```
+
+Сервер: `http://127.0.0.1:8080`. База SQLite (`test.db`) хранится в volume `go-server-data`.
+
+Только образ без compose:
+
+```bash
+docker build -t ai-of-cursor-go-server:latest .
+docker run --rm -p 8080:8080 -v go-server-data:/app ai-of-cursor-go-server:latest
+```
+
+Остановка:
+
+```bash
+docker compose down
+```
+
+## Проверка эндпоинтов
+
+Скрипт `scripts/test-endpoints.sh` последовательно вызывает все маршруты и проверяет HTTP-коды и ключевые поля в JSON.
+
+Сервер уже запущен (`just run` или Docker):
+
+```bash
+./scripts/test-endpoints.sh
+# или
+just test-api
+```
+
+Удалённый хост:
+
+```bash
+BASE_URL=http://your-server:8080 ./scripts/test-endpoints.sh
+```
+
+После `docker compose up`:
+
+```bash
+just test-api-docker
+```
+
+![Пример тестирования](go-server-screenshot.png)
 
 ## API: примеры
 

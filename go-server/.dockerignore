@@ -1,0 +1,7 @@
+server
+.git
+.gitignore
+test.db
+*.md
+openapi.yaml
+scripts/

@@ -1,0 +1,12 @@
+services:
+  go-server:
+    build: .
+    image: ai-of-cursor-go-server:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - go-server-data:/app
+    restart: unless-stopped
+
+volumes:
+  go-server-data:

@@ -18,3 +18,21 @@ vet:
 
 test:
     go test ./...
+
+docker-build:
+    docker build -t ai-of-cursor-go-server:latest .
+
+docker-up:
+    docker compose up -d --build
+
+docker-down:
+    docker compose down
+
+docker-logs:
+    docker compose logs -f go-server
+
+test-api:
+    ./scripts/test-endpoints.sh
+
+test-api-docker:
+    BASE_URL=http://127.0.0.1:8080 ./scripts/test-endpoints.sh
