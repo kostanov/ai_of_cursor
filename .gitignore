@@ -11,3 +11,4 @@ wheels/
 
 # Database
 *.db
+passwords.txt
