@@ -1,4 +1,5 @@
 default:
+	# Command list
     @just --list
 
 run:
